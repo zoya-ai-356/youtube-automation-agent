@@ -1,5 +1,16 @@
 require('../utils/native-loader');
-const sqlite3 = require('sqlite3').verbose();
+let sqlite3;
+try {
+  sqlite3 = require('sqlite3').verbose();
+} catch (loadErr) {
+  try {
+    sqlite3 = require('sqlite3');
+  } catch (_) {
+    console.error('\n❌ SQLite3 native module failed to load. On Android/Termux, run:');
+    console.error('   pkg install -y make clang sqlite python && npm install sqlite3 --build-from-source --sqlite=$PREFIX\n');
+    throw loadErr;
+  }
+}
 const path = require('path');
 const fs = require('fs').promises;
 const { Logger } = require('../utils/logger');

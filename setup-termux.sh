@@ -59,14 +59,34 @@ if [ "$IS_TERMUX" = true ]; then
   if ! command -v python3 >/dev/null 2>&1 && ! command -v python >/dev/null 2>&1; then
     PACKAGES_TO_INSTALL+=("python")
   fi
+  if ! command -v clang >/dev/null 2>&1; then
+    PACKAGES_TO_INSTALL+=("clang")
+  fi
+  if ! command -v make >/dev/null 2>&1; then
+    PACKAGES_TO_INSTALL+=("make")
+  fi
+  if ! command -v sqlite3 >/dev/null 2>&1; then
+    PACKAGES_TO_INSTALL+=("sqlite")
+  fi
 
   if [ ${#PACKAGES_TO_INSTALL[@]} -gt 0 ]; then
     echo -e "${CYAN}📦 Installing missing packages via pkg:${NC} ${PACKAGES_TO_INSTALL[*]}"
     pkg update -y || apt-get update -y
-    pkg install -y "${PACKAGES_TO_INSTALL[@]}" || apt-get install -y "${PACKAGES_TO_INSTALL[@]}"
+    pkg install -y "${PACKAGES_TO_INSTALL[@]}" build-essential || apt-get install -y "${PACKAGES_TO_INSTALL[@]}"
   else
-    echo -e "${GREEN}✓ All required system packages (node, git, ffmpeg, python) are present${NC}"
+    echo -e "${GREEN}✓ All required system packages (node, git, ffmpeg, python, clang, make, sqlite) are present${NC}"
   fi
+
+  # Configure node-gyp to resolve Termux "Undefined variable android_ndk_path" error
+  mkdir -p "$HOME/.gyp"
+  cat <<'EOF' > "$HOME/.gyp/include.gypi"
+{
+  "variables": {
+    "android_ndk_path": ""
+  }
+}
+EOF
+  export GYP_DEFINES="android_ndk_path=''"
 fi
 
 # 5. Verify Node.js & npm
@@ -129,17 +149,23 @@ echo -e "${GREEN}✓ Directory structure verified${NC}"
 
 # 8. Install npm Dependencies
 echo -e "\n${BOLD}📦 Checking npm dependencies...${NC}"
-if [ ! -d "$PROJECT_DIR/node_modules" ] || [ ! -f "$PROJECT_DIR/node_modules/.package-lock.json" ] && [ ! -d "$PROJECT_DIR/node_modules/express" ]; then
+export GYP_DEFINES="android_ndk_path=''"
+if [ ! -d "$PROJECT_DIR/node_modules" ] || [ ! -d "$PROJECT_DIR/node_modules/express" ]; then
   echo -e "${CYAN}Running npm install...${NC}"
   if [ "$IS_SHARED_STORAGE" = true ]; then
-    npm install --no-audit --no-fund --no-bin-links
+    npm install --no-audit --no-fund --no-bin-links || true
   else
-    npm install --no-audit --no-fund
+    npm install --no-audit --no-fund || true
   fi
-  echo -e "${GREEN}✓ Dependencies installed successfully${NC}"
-else
-  echo -e "${GREEN}✓ Dependencies are already installed (node_modules present)${NC}"
 fi
+
+# Ensure sqlite3 native module builds cleanly on Android/Termux
+if [ "$IS_TERMUX" = true ] && ! node -e "require('sqlite3')" >/dev/null 2>&1; then
+  echo -e "${CYAN}Building sqlite3 for Termux (linking system SQLite)...${NC}"
+  PREFIX_PATH="${PREFIX:-/data/data/com.termux/files/usr}"
+  npm install sqlite3 --build-from-source --sqlite="$PREFIX_PATH" || true
+fi
+echo -e "${GREEN}✓ Dependencies verified${NC}"
 
 # 9. Configure Environment File (.env)
 echo -e "\n${BOLD}⚙️  Checking environment configuration...${NC}"

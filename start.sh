@@ -18,6 +18,8 @@ NC='\033[0m'
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$PROJECT_DIR"
 
+export GYP_DEFINES="android_ndk_path=''"
+
 PID_FILE="$PROJECT_DIR/.app.pid"
 LOG_FILE="$PROJECT_DIR/logs/server.log"
 
