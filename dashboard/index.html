@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="en" class="preboot">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#06080c">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="YT Studio">
+  <meta name="application-name" content="YT Studio">
+  <title>YouTube Automation Studio</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="/icon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+  <link rel="apple-touch-icon" href="/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css?v=2.3">
+</head>
+<body>
+  <div class="aurora" aria-hidden="true"></div>
+  <div class="spotlight" aria-hidden="true"></div>
+  <div class="sidebar-overlay" id="sidebar-overlay" aria-hidden="true"></div>
+
+  <aside class="sidebar" id="app-sidebar">
+      <div class="sidebar-header">
+        <a class="brand" href="#overview" aria-label="YouTube Automation Studio home">
+          <span class="brand-mark"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5.5v13l11-6.5z" fill="currentColor"/></svg></span>
+          <span><strong id="brand-name">Automation Studio</strong><small>Master Cockpit</small></span>
+        </a>
+        <button id="sidebar-close" class="icon-button mobile-only" aria-label="Close sidebar">✕</button>
+      </div>
+
+      <div class="sidebar-scroll">
+        <p class="sidebar-label" aria-hidden="true">Main</p>
+        <nav aria-label="Main Navigation">
+          <button class="nav-item active" data-view="overview"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7.5" height="9.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="5.5" rx="1.5"/><rect x="13.5" y="11.5" width="7.5" height="9.5" rx="1.5"/><rect x="3" y="15.5" width="7.5" height="5.5" rx="1.5"/></svg> Overview</button>
+          <button class="nav-item" data-view="pipeline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.7 10.7l6.6-3.4M8.7 13.3l6.6 3.4"/></svg> Live Pipeline <span class="nav-pulse"></span></button>
+        </nav>
+
+        <p class="sidebar-label" aria-hidden="true">Creation Studio</p>
+        <nav aria-label="Creation Navigation">
+          <button class="nav-item" data-view="research"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6"/></svg> Research & Backlog</button>
+          <button class="nav-item" data-view="scripts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Scripts Studio</button>
+          <button class="nav-item" data-view="voice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg> Voice & Visuals</button>
+          <button class="nav-item" data-view="rendering"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg> Video & Rendering</button>
+          <button class="nav-item" data-view="review"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg> Quality Review <b id="review-badge" class="badge hidden">0</b></button>
+        </nav>
+
+        <p class="sidebar-label" aria-hidden="true">Growth & Channels</p>
+        <nav aria-label="Growth Navigation">
+          <button class="nav-item" data-view="publishing"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16.5" rx="2"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4M7.5 13.5h3v3h-3z"/></svg> YouTube & Calendar</button>
+          <button class="nav-item" data-view="operator"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M18.7 5.3l-2.1 2.1M7.4 16.6l-2.1 2.1"/></svg> Autonomous Operator</button>
+          <button class="nav-item" data-view="analytics"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 20.5h17"/><path d="M6.5 20V11M11 20V4.5M15.5 20v-7M20 20V8.5"/></svg> Analytics & ROI</button>
+          <button class="nav-item" data-view="engagement"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 01-9.1 8.4 9 9 0 01-3.8-.9L3 20l1-4.9A8.4 8.4 0 1121 11.5z"/><path d="M8 10h8M8 13.5h5"/></svg> Audience Voice</button>
+        </nav>
+
+        <p class="sidebar-label" aria-hidden="true">Operations & System</p>
+        <nav aria-label="System Navigation">
+          <button class="nav-item" data-view="readiness"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.8l7.5 3v6c0 4.8-3.2 8.2-7.5 9.4-4.3-1.2-7.5-4.6-7.5-9.4v-6z"/><path d="M8.8 12.2l2.3 2.3 4.4-4.6"/></svg> Production Readiness</button>
+          <button class="nav-item" data-view="system"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> System Health</button>
+          <button class="nav-item" data-view="logs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg> Activity & Logs</button>
+          <button class="nav-item" data-view="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.34 1.87l.06.06a2 2 0 11-2.83 2.83l-.06-.06A1.7 1.7 0 0015 19.4a1.7 1.7 0 00-1 1.55V21a2 2 0 11-4 0v-.09A1.7 1.7 0 009 19.4a1.7 1.7 0 00-1.87.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.7 1.7 0 004.6 15a1.7 1.7 0 00-1.55-1H3a2 2 0 110-4h.09A1.7 1.7 0 004.6 9a1.7 1.7 0 00-.33-1.87l-.06-.06a2 2 0 112.83-2.83l.06.06A1.7 1.7 0 009 4.6a1.7 1.7 0 001-1.55V3a2 2 0 114 0v.09a1.7 1.7 0 001 1.51 1.7 1.7 0 001.87-.34l.06-.06a2 2 0 112.83 2.83l-.06.06A1.7 1.7 0 0019.4 9c.28.66.9 1.05 1.55 1H21a2 2 0 110 4h-.09a1.7 1.7 0 00-1.51 1z"/></svg> AI & Settings</button>
+        </nav>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="system-pill" id="live-indicator"><i id="system-dot"></i><span id="system-label">Connecting…</span></div>
+        <button id="automation-toggle" class="button secondary full">Pause automation</button>
+      </div>
+    </aside>
+
+  <div class="app-shell">
+    <div class="app-main-layout">
+      <header class="topbar" id="app-header">
+        <div class="topbar-left">
+          <button id="mobile-menu-btn" class="icon-button mobile-only" aria-label="Toggle navigation menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div class="topbar-titles">
+            <p class="eyebrow" id="view-eyebrow">MASTER COCKPIT</p>
+            <h1 id="view-title">Know what happens next.</h1>
+          </div>
+        </div>
+        <div class="top-actions">
+          <div id="live-pulse-badge" class="live-pill"><span class="dot"></span> SSE LIVE</div>
+          <button id="refresh-button" class="icon-button" title="Refresh dashboard" aria-label="Refresh dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 11-2.64-6.36"/><path d="M21 3v6h-6"/></svg></button>
+          <button id="generate-button" class="button primary">＋ Create video</button>
+        </div>
+      </header>
+
+      <div id="loading" class="loading-bar"></div>
+      <div id="toast" class="toast hidden" role="status"></div>
+
+      <main class="main-content">
+        <!-- VIEW 1: OVERVIEW -->
+        <section id="overview-view" class="view active">
+        <div id="setup-banner" class="setup-banner hidden"><div><strong>Finish setup to activate your agents</strong><p>The operator console is ready, but generation and publishing stay disabled until credentials are configured.</p></div><code>npm run walkthrough</code></div>
+        
+        <!-- Live System Workflow Mini Strip -->
+        <article class="panel workflow-strip-panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">LIVE WORKFLOW</p><h2>Active Automation Stream</h2></div>
+            <button class="text-button" data-go="pipeline">Open Studio Visualizer →</button>
+          </div>
+          <div id="mini-workflow-pipeline" class="workflow-mini-pipeline"></div>
+        </article>
+
+        <div class="stats-grid">
+          <article class="stat"><span>Needs review</span><strong id="stat-review">—</strong><small>waiting for a decision</small></article>
+          <article class="stat"><span>Scheduled</span><strong id="stat-scheduled">—</strong><small>next 30 days</small></article>
+          <article class="stat"><span>Published</span><strong id="stat-published">—</strong><small>all time</small></article>
+          <article class="stat"><span>Average score</span><strong id="stat-score">—</strong><small>recent content performance</small></article>
+        </div>
+
+        <div class="overview-grid">
+          <article class="panel review-panel">
+            <div class="panel-heading"><div><p class="eyebrow">DECISION QUEUE</p><h2>Ready for you</h2></div><button class="text-button" data-go="review">View review desk →</button></div>
+            <div id="review-list" class="card-list"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-heading"><div><p class="eyebrow">ACTIVE WORK</p><h2>Generation jobs</h2></div><button class="text-button" data-go="rendering">Rendering queue →</button></div>
+            <div id="job-list" class="card-list compact"></div>
+          </article>
+        </div>
+
+        <div class="overview-grid lower">
+          <article class="panel">
+            <div class="panel-heading"><div><p class="eyebrow">UP NEXT</p><h2>Publishing calendar</h2></div><button class="text-button" data-go="publishing">Open calendar →</button></div>
+            <div id="next-schedule" class="timeline"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-heading"><div><p class="eyebrow">INBOX</p><h2>Recent activity</h2></div><button class="text-button" data-go="logs">All logs →</button></div>
+            <div id="notification-list" class="activity-list"></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- VIEW 2: LIVE PIPELINE (VISUAL WORKFLOW) -->
+      <section id="pipeline-view" class="view">
+        <div class="section-intro">
+          <div>
+            <h2>Live System Visualization Pipeline</h2>
+            <p>Real-time physical stage monitoring from Research to Analytics with particle transmission.</p>
+          </div>
+          <div class="pipeline-actions">
+            <select id="pipeline-filter"><option value="all">All content</option><option value="needs_review">Needs review</option><option value="needs_attention">Needs attention</option><option value="approved">Approved</option><option value="published">Published</option></select>
+          </div>
+        </div>
+
+        <!-- Master Interactive Visualizer Diagram with Particle Animation -->
+        <article class="panel visualizer-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">NEURAL DISPATCHER</p>
+              <h2 id="pipeline-active-title">Live Production Pipeline</h2>
+            </div>
+            <span id="pipeline-active-badge" class="status-chip idle">System Idle</span>
+          </div>
+          
+          <div class="pipeline-canvas-container" id="pipeline-canvas-container">
+            <!-- 9 Interactive Stage Nodes -->
+            <div class="pipeline-board" id="pipeline-board">
+              <!-- Rendered via JavaScript with real stage states and animated connection conduits -->
+            </div>
+          </div>
+
+          <!-- Stage Telemetry Detail Drawer -->
+          <div id="pipeline-stage-drawer" class="stage-drawer hidden">
+            <div class="drawer-header">
+              <div>
+                <span class="drawer-label" id="drawer-stage-label">STAGE TELEMETRY</span>
+                <h3 id="drawer-stage-title">Stage Details</h3>
+              </div>
+              <button class="icon-button small" id="drawer-close-btn">✕</button>
+            </div>
+            <div class="drawer-body" id="drawer-stage-content"></div>
+          </div>
+        </article>
+
+        <!-- Generation Jobs Checkpoint Stream -->
+        <article class="panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">DURABLE CHECKPOINTS</p><h2>Active Generation & Recovery Stream</h2></div>
+          </div>
+          <div id="pipeline-jobs-stream" class="card-list"></div>
+        </article>
+
+        <!-- Pipeline Inventory Grid -->
+        <div class="panel-heading" style="margin-top: 24px;">
+          <div><p class="eyebrow">CONTENT REPOSITORY</p><h2>All Pipeline Productions</h2></div>
+        </div>
+        <div id="pipeline-list" class="pipeline-list"></div>
+      </section>
+
+      <!-- VIEW 3: RESEARCH & BACKLOG -->
+      <section id="research-view" class="view">
+        <div class="split-heading">
+          <div>
+            <h2>Research & Content Ideas Backlog</h2>
+            <p>Shape themes, explore audience signals, and trigger video production with one click.</p>
+          </div>
+          <button id="add-idea-button-research" class="button primary">＋ Add content idea</button>
+        </div>
+        <div class="calendar-grid">
+          <article class="panel">
+            <div class="panel-heading"><div><p class="eyebrow">TOPIC QUEUE</p><h2>Content Ideas Backlog</h2></div></div>
+            <div id="research-idea-list" class="idea-list"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-heading"><div><p class="eyebrow">AUDIENCE REQUESTS</p><h2>Ideas Mined From Comments</h2></div></div>
+            <div id="research-audience-ideas" class="idea-list"></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- VIEW 4: SCRIPTS STUDIO -->
+      <section id="scripts-view" class="view">
+        <div class="split-heading">
+          <div>
+            <h2>Scripts Studio</h2>
+            <p>Review, refine, and edit hooks, narration narrative, pacing, tone, and call-to-actions.</p>
+          </div>
+          <button id="create-script-btn" class="button secondary">Draft New Script</button>
+        </div>
+        <div class="overview-grid">
+          <article class="panel">
+            <div class="panel-heading"><div><p class="eyebrow">INVENTORY</p><h2>Channel Scripts</h2></div></div>
+            <div id="scripts-list" class="card-list compact"></div>
+          </article>
+          <article class="panel script-viewer-panel">
+            <div class="panel-heading">
+              <div><p class="eyebrow">EDITOR</p><h2 id="script-viewer-title">Select a script to inspect</h2></div>
+              <button id="script-save-btn" class="button primary small hidden">Save changes</button>
+            </div>
+            <div id="script-viewer-content" class="script-viewer-content"><p class="empty-inline">Select any script on the left to read, review facts, or edit its hook and sections.</p></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- VIEW 5: VOICE & VISUALS STUDIO -->
+      <section id="voice-view" class="view">
+        <div class="section-intro">
+          <div>
+            <h2>Voice & Visuals Studio</h2>
+            <p>Configure TTS narration voice providers, audition speech, and preview visual style assets.</p>
+          </div>
+        </div>
+        <div class="operator-grid">
+          <article class="panel">
+            <div class="panel-heading"><div><p class="eyebrow">TTS AUDITION</p><h2>Narration Tester</h2></div></div>
+            <form id="voice-audition-form" class="form-grid">
+              <label><span>Narration Provider</span>
+                <select id="voice-provider-select">
+                  <option value="elevenlabs">ElevenLabs (Eleven v3)</option>
+                  <option value="openai">OpenAI (gpt-4o-mini-tts)</option>
+                  <option value="gemini">Google Gemini (gemini-3.8-flash-tts)</option>
+                </select>
+              </label>
+              <label><span>Voice Tone</span>
+                <select id="voice-tone-select">
+                  <option value="authoritative">Clear & Authoritative</option>
+                  <option value="conversational" selected>Conversational & Practical</option>
+                  <option value="storyteller">Documentary Storyteller</option>
+                  <option value="enthusiastic">Energetic Tech Reviewer</option>
+                </select>
+              </label>
+              <label class="full-row"><span>Audition Text</span>
+                <textarea id="voice-sample-text" rows="3">Welcome to YouTube Automation Studio. This is a live synthesis test of the configured voice pipeline.</textarea>
+              </label>
+              <div class="form-actions">
+                <button type="button" id="voice-test-btn" class="button primary">Generate Audition</button>
+              </div>
+            </form>
+            <div id="voice-audition-result" class="voice-result-box hidden">
+              <p class="audition-meta">Ready to audition. Click above to trigger synthesis.</p>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-heading"><div><p class="eyebrow">VISUAL DIRECTION</p><h2>Thumbnail Concepts & Aesthetic</h2></div></div>
+            <div id="visual-concepts-grid" class="visual-gallery-grid">
+              <div class="concept-card">
+                <div class="concept-preview gradient-1">
+                  <span>HD 16:9 Slide</span>
+                </div>
+                <strong>Minimalist Editorial</strong>
+                <small>High contrast typography, deep slate canvas</small>
+              </div>
+              <div class="concept-card">
+                <div class="concept-preview gradient-2">
+                  <span>HD 16:9 Slide</span>
+                </div>
+                <strong>Tech Infographic</strong>
+                <small>Neon accents, circuit lines, data nodes</small>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- VIEW 6: VIDEO & RENDERING -->
+      <section id="rendering-view" class="view">
+        <div class="section-intro">
+          <div>
+            <h2>Video Generation & Rendering Queue</h2>
+            <p>Monitor real Playwright browser slide assembly, FFmpeg stitching, and provider clip quotas.</p>
+          </div>
+          <span id="rendering-engine-pill" class="status-chip success">FFmpeg Active</span>
+        </div>
+        <div class="overview-grid">
+          <article class="panel">
+            <div class="panel-heading"><div><p class="eyebrow">RENDER QUEUE</p><h2>Active Video Builds</h2></div></div>
+            <div id="rendering-jobs-list" class="card-list compact"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-heading"><div><p class="eyebrow">ASSEMBLY HARDWARE</p><h2>Rendering Pipeline Diagnostics</h2></div></div>
+            <div class="readiness-grid">
+              <div class="readiness-card passed">
+                <div class="check-title"><h3>FFmpeg Media Engine</h3><span class="status passed">READY</span></div>
+                <p>System binary resolved at <code>/usr/bin/ffmpeg</code>. Direct H.264/AAC hardware decoding enabled.</p>
+              </div>
+              <div class="readiness-card passed">
+                <div class="check-title"><h3>Sharp Image Processor</h3><span class="status passed">READY</span></div>
+                <p>Native libvips accelerated image composition and thumbnail generator active.</p>
+              </div>
+              <div class="readiness-card passed">
+                <div class="check-title"><h3>Playwright Browser</h3><span class="status passed">READY</span></div>
+                <p>High-resolution DOM slideshow snapshot renderer initialized for 1920x1080 canvas.</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- VIEW 7: QUALITY REVIEW -->
+      <section id="review-view" class="view">
+        <div class="section-intro">
+          <div>
+            <h2>Quality Review & Evidence Desk</h2>
+            <p>Inspect fact verification, DarkzSEO discoverability audits, and launch Scene Repair Studio.</p>
+          </div>
+          <span id="quality-pending-pill" class="status-chip warning">0 Needs Review</span>
+        </div>
+        <article class="panel">
+          <div class="panel-heading"><div><p class="eyebrow">ACTION REQUIRED</p><h2>Productions Awaiting Your Approval</h2></div></div>
+          <div id="review-desk-list" class="pipeline-list"></div>
+        </article>
+      </section>
+
+      <!-- VIEW 8: YOUTUBE & CALENDAR -->
+      <section id="publishing-view" class="view">
+        <div class="split-heading">
+          <div>
+            <h2>YouTube Publishing & Calendar</h2>
+            <p>Upcoming scheduled releases and library of live published videos on your channel.</p>
+          </div>
+          <button id="add-idea-btn-pub" class="button secondary">＋ Schedule Release</button>
+        </div>
+        <div class="calendar-grid">
+          <article class="panel">
+            <div class="panel-heading"><div><p class="eyebrow">SCHEDULED</p><h2>Upcoming Releases</h2></div></div>
+            <div id="calendar-list" class="calendar-list"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-heading"><div><p class="eyebrow">PUBLISHED</p><h2>Live Channel Videos</h2></div><button id="refresh-published-btn" class="button secondary small">Refresh</button></div>
+            <div id="published-videos-list" class="published-list card-list"></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- VIEW 9: AUTONOMOUS OPERATOR -->
+      <section id="operator-view" class="view">
+        <div class="section-intro"><div><h2>Autonomous Channel Operator</h2><p>Set the destination once. YouTube Automation Agent researches, plans, produces, and manages the channel workflow around it.</p></div><span id="operator-strategy-status" class="status">Not configured</span></div>
+        <div class="operator-grid">
+          <form id="strategy-form" class="panel settings-form">
+            <div class="panel-heading"><div><p class="eyebrow">CHANNEL MANDATE</p><h2>What should this channel achieve?</h2></div></div>
+            <div class="form-grid">
+              <label class="full-row"><span>Objective</span><textarea name="objective" rows="3" maxlength="1000" placeholder="Become the most trusted practical channel for small businesses adopting AI." required></textarea></label>
+              <label class="full-row"><span>Audience</span><textarea name="audience" rows="2" maxlength="500" placeholder="Owners and operators at 5–50 person service businesses" required></textarea></label>
+              <label class="full-row"><span>Value proposition</span><textarea name="valueProposition" rows="2" maxlength="1000" placeholder="Clear, tested advice viewers can apply this week"></textarea></label>
+              <label class="full-row"><span>Content pillars</span><input name="contentPillars" placeholder="AI workflows, automation playbooks, tool reviews" required><small>Separate 1–8 durable themes with commas.</small></label>
+              <label><span>Videos per week</span><input name="cadencePerWeek" type="number" min="1" max="7" value="1"></label>
+              <label><span>Videos per planning run</span><input name="videosPerRun" type="number" min="1" max="5" value="1"></label>
+              <label><span>Default format</span><select name="defaultFormat"><option value="explainer">Explainer</option><option value="tutorial">Tutorial</option><option value="list">List</option><option value="review">Review</option><option value="story">Story</option></select></label>
+              <label><span>Default length</span><select name="defaultLength"><option value="short">Short · 2–4 min</option><option value="medium">Medium · 8–12 min</option><option value="long">Long · 15–20 min</option></select></label>
+              <label><span>Primary outcome</span><select name="primaryKpi"><option value="views">Views</option><option value="watch_hours">Watch hours</option><option value="subscribers">Net subscribers</option><option value="engagement">Engagement rate</option><option value="revenue">Estimated revenue</option></select></label>
+              <label><span>Target value</span><input name="targetValue" type="number" min="0.01" step="0.01" placeholder="100"></label>
+              <label><span>Target window</span><select name="targetWindowDays"><option value="7">7 days</option><option value="28" selected>28 days</option><option value="90">90 days</option><option value="365">365 days</option></select></label>
+              <label><span>Monthly production budget</span><span class="currency-input"><select name="outcomeCurrency" aria-label="Outcome currency"><option value="USD">USD</option><option value="CAD">CAD</option><option value="EUR">EUR</option><option value="GBP">GBP</option><option value="AUD">AUD</option></select><input name="monthlyBudget" type="number" min="0" step="0.01" placeholder="Optional"></span></label>
+              <label class="full-row"><span>Outcome context</span><input name="successMetric" maxlength="300" placeholder="Grow qualified subscribers who return for practical automation tutorials"><small>Used by planning alongside the measurable primary outcome.</small></label>
+              <label class="full-row"><span>Boundaries and constraints</span><textarea name="constraints" rows="3" maxlength="2000" placeholder="No hype, no unverified statistics, explain costs and tradeoffs."></textarea></label>
+            </div>
+            <p class="callout">The operator uses YouTube trend signals, configured competitors, and channel history. Publishing still obeys your quality, factual-review, rights, and approval gates.</p>
+            <div class="form-actions"><button type="submit" class="button secondary">Save strategy</button><button id="activate-operator-button" type="button" class="button primary">Activate & run now</button><button id="pause-operator-button" type="button" class="button danger hidden">Pause operator</button></div>
+          </form>
+          <div class="operator-side">
+            <article class="panel">
+              <div class="panel-heading"><div><p class="eyebrow">CURRENT RUN</p><h2 id="operator-run-title">Waiting for a strategy</h2></div><div class="run-actions"><button id="resume-operator-run" class="text-button approve hidden">Resume run</button><button id="cancel-operator-run" class="text-button hidden">Stop run</button></div></div>
+              <div id="operator-run-summary"></div>
+            </article>
+            <article class="panel">
+              <div class="panel-heading"><div><p class="eyebrow">EDITORIAL PLAN</p><h2>What YouTube Automation Agent decided to make</h2></div></div>
+              <div id="operator-plan" class="plan-list"></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW 10: ANALYTICS & ROI -->
+      <section id="analytics-view" class="view">
+        <div class="section-intro"><div><h2>Performance Signals & ROI</h2><p>Data translated into decisions, not vanity metrics.</p></div></div>
+        <article class="panel channel-snapshot">
+          <div class="panel-heading"><div><p class="eyebrow">YOUR CHANNEL ON YOUTUBE</p><h2 id="channel-snapshot-title">Channel snapshot</h2></div><button id="channel-snapshot-refresh" class="button secondary small" type="button">Refresh</button></div>
+          <div id="channel-snapshot" class="baseline-grid channel-snapshot-grid"></div>
+          <p id="channel-snapshot-note" class="callout">Whole-channel totals from YouTube, including videos published outside YouTube Automation Agent.</p>
+        </article>
+        <div class="stats-grid analytics-stats">
+          <article class="stat"><span>Analyzed videos</span><strong id="analytics-total">—</strong><small>analyzed by YouTube Automation Agent, last 7 days</small></article>
+          <article class="stat"><span>Performance score</span><strong id="analytics-score">—</strong><small>channel average</small></article>
+          <article class="stat wide"><span>Recommended action</span><strong id="analytics-action" class="recommendation">Collecting enough data to recommend a move.</strong></article>
+        </div>
+        <article class="panel outcome-studio">
+          <div class="panel-heading"><div><p class="eyebrow">OUTCOME &amp; ROI STUDIO</p><h2>Is the channel achieving its mandate?</h2></div><span id="outcome-status" class="status">Not configured</span></div>
+          <div id="outcome-summary" class="outcome-summary"></div>
+          <div id="outcome-economics" class="outcome-economics"></div>
+          <div id="outcome-breakdowns" class="outcome-breakdowns"></div>
+          <p id="outcome-policy" class="callout">Configure a primary outcome in the Autonomous Operator to align channel learning with a measurable goal.</p>
+        </article>
+        <div class="learning-grid">
+          <article class="panel">
+            <div class="panel-heading"><div><p class="eyebrow">CHANNEL BASELINE</p><h2>What real results say</h2></div><span id="learning-snapshot-count" class="status">0 snapshots</span></div>
+            <div id="learning-baseline" class="baseline-grid"></div>
+            <p class="callout">Only real YouTube analytics enter this evidence layer. Simulated fallback data is excluded.</p>
+          </article>
+          <article class="panel">
+            <div class="panel-heading"><div><p class="eyebrow">WHAT THE AGENT LEARNED</p><h2>Review recommendations</h2></div><span id="learning-approved-count" class="status">0 approved</span></div>
+            <div id="learning-recommendations" class="learning-list"></div>
+          </article>
+        </div>
+        <article class="panel growth-experiment-studio">
+          <div class="panel-heading experiment-heading">
+            <div><p class="eyebrow">CONTROLLED GROWTH EXPERIMENTS</p><h2>Prove the next move</h2><p>Run approved title and thumbnail arms against real YouTube evidence, then separately approve the winner.</p></div>
+            <span id="experiment-status" class="status">0 running</span>
+          </div>
+          <form id="experiment-create-form" class="experiment-create-form">
+            <label><span>Published production</span><select name="productionId" id="experiment-candidate" required></select></label>
+            <label><span>Hours per arm</span><select name="armDurationHours"><option value="24">24 hours</option><option value="48" selected>48 hours</option><option value="72">72 hours</option></select></label>
+            <label><span>Minimum impressions</span><input name="minImpressions" type="number" min="100" max="1000000" step="100" value="1000" required></label>
+            <button id="experiment-create-button" class="button secondary small" type="submit">Create test plan</button>
+          </form>
+          <div id="growth-experiments" class="growth-experiment-list"></div>
+          <p id="experiment-policy" class="callout"></p>
+        </article>
+        <article class="panel retention-studio">
+          <div class="panel-heading retention-heading">
+            <div><p class="eyebrow">SCENE-AWARE RETENTION</p><h2>Where viewers stay—and leave</h2><p>Real YouTube retention points mapped onto the exact production timeline.</p></div>
+            <div class="retention-controls">
+              <label><span class="sr-only">Retention snapshot</span><select id="retention-snapshot-select" aria-label="Choose a retention snapshot"></select></label>
+              <button id="refresh-retention-button" class="button secondary small" disabled>Refresh curve</button>
+            </div>
+          </div>
+          <div id="retention-meta" class="scene-summary"></div>
+          <div id="retention-chart" class="retention-chart"></div>
+          <div id="retention-scenes" class="retention-scene-list"></div>
+          <p class="callout retention-policy">Scene findings remain evidence only. They influence future scripts and pacing only after their recommendation is approved above; published videos are never edited automatically.</p>
+        </article>
+        <article class="panel"><div class="panel-heading"><div><p class="eyebrow">TOP PERFORMERS</p><h2>What is working</h2></div></div><div id="top-performers" class="card-list"></div></article>
+        <article class="panel activation-panel"><div class="panel-heading"><div><p class="eyebrow">LOCAL ACTIVATION</p><h2>First-run journey</h2></div></div><p class="callout">Calculated locally from your database and video files. Nothing is transmitted unless anonymous telemetry is explicitly enabled.</p><div id="activation-list" class="timeline"></div></article>
+      </section>
+
+      <!-- VIEW 11: AUDIENCE ENGAGEMENT -->
+      <section id="engagement-view" class="view">
+        <div class="engagement-grid">
+          <article class="panel">
+            <div class="panel-heading">
+              <div><p class="eyebrow">AUDIENCE VOICE</p><h2>What commenters are saying</h2></div>
+              <span class="status" id="engagement-posting-status">posting locked</span>
+            </div>
+            <p id="engagement-policy" class="engagement-policy"></p>
+            <div class="panel-heading">
+              <select id="engagement-video-select" aria-label="Choose a synced video"></select>
+              <button id="engagement-sync-button" class="button secondary small">Sync now</button>
+            </div>
+            <div id="engagement-meta" class="engagement-meta"></div>
+            <div id="engagement-themes"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-heading">
+              <div><p class="eyebrow">REPLY QUEUE</p><h2>Approve before anything posts</h2></div>
+              <span class="status" id="engagement-drafts-count">0 drafts</span>
+            </div>
+            <div class="panel-heading"><button id="engagement-draft-button" class="button secondary small">Draft replies</button></div>
+            <div id="engagement-drafts"></div>
+          </article>
+        </div>
+        <div class="engagement-grid">
+          <article class="panel">
+            <div class="panel-heading">
+              <div><p class="eyebrow">NEEDS ATTENTION</p><h2>Likely spam and scams</h2></div>
+              <span class="status warning" id="engagement-attention-count">0 flagged</span>
+            </div>
+            <div id="engagement-attention"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-heading">
+              <div><p class="eyebrow">AUDIENCE-REQUESTED IDEAS</p><h2>Approve to feed the operator</h2></div>
+              <span class="status" id="engagement-ideas-count">0 pending</span>
+            </div>
+            <div id="engagement-ideas"></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- VIEW 12: PRODUCTION READINESS -->
+      <section id="readiness-view" class="view">
+        <div class="section-intro readiness-intro">
+          <div><h2>Production Readiness</h2><p>Verify the real path from providers to a publishable YouTube upload before autonomy spends time or credits.</p></div>
+          <span id="readiness-status" class="status unverified">Unverified</span>
+        </div>
+        <article class="panel readiness-hero">
+          <div>
+            <p class="eyebrow">VERIFIED DRY RUN</p>
+            <h2 id="readiness-title">Prove the pipeline, without uploading.</h2>
+            <p id="readiness-summary">The check makes small live text and narration requests, verifies channel access, builds a local audio/video MP4, and validates queued metadata. It never creates or uploads a YouTube video.</p>
+            <div id="readiness-meta" class="meta-line">No readiness run recorded.</div>
+          </div>
+          <div class="readiness-actions">
+            <label class="toggle paid-probe"><input id="paid-image-probe" type="checkbox"><span></span> Include paid image probe</label>
+            <label class="toggle paid-probe"><input id="paid-video-probe" type="checkbox"><span></span> Include paid video probe</label>
+            <button id="run-readiness-button" class="button primary">Run verified check</button>
+            <small>Live provider probes can consume a small amount of quota or credits.</small>
+          </div>
+        </article>
+        <div id="readiness-checks" class="readiness-grid"></div>
+        <p class="callout readiness-policy">A recorded blocking failure stops autonomous generation and publishing until a later run passes. An unverified or stale result remains visible but does not interrupt manual work.</p>
+      </section>
+
+      <!-- VIEW 13: SYSTEM HEALTH -->
+      <section id="system-view" class="view">
+        <div class="section-intro">
+          <div>
+            <h2>System Health & Diagnostics</h2>
+            <p>Real-time metrics for backend, AI API providers, YouTube connection, rendering engine, and storage.</p>
+          </div>
+          <button id="refresh-health-btn" class="button secondary small">Refresh Health</button>
+        </div>
+        <div class="stats-grid">
+          <article class="stat"><span>Backend Memory</span><strong id="health-stat-mem">—</strong><small id="health-stat-heap">Heap used</small></article>
+          <article class="stat"><span>System Uptime</span><strong id="health-stat-uptime">—</strong><small>Continuous operation</small></article>
+          <article class="stat"><span>Active Providers</span><strong id="health-stat-providers">—</strong><small>Configured & verified</small></article>
+          <article class="stat"><span>Storage Usage</span><strong id="health-stat-storage">—</strong><small>SQLite database size</small></article>
+        </div>
+
+        <div class="overview-grid">
+          <article class="panel">
+            <div class="panel-heading"><div><p class="eyebrow">AI MODEL PROVIDERS</p><h2>API Credentials & Status</h2></div></div>
+            <div id="health-providers-list" class="health-provider-grid"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-heading"><div><p class="eyebrow">INTEGRATIONS</p><h2>YouTube & Rendering Engine</h2></div></div>
+            <div id="health-integrations-list" class="readiness-grid"></div>
+          </article>
+        </div>
+
+        <article class="panel" style="margin-top: 24px;">
+          <div class="panel-heading"><div><p class="eyebrow">AUDIT & FAILURES</p><h2>Recent System Incidents</h2></div></div>
+          <div id="health-failures-list" class="activity-list"></div>
+        </article>
+      </section>
+
+      <!-- VIEW 14: ACTIVITY & LOGS -->
+      <section id="logs-view" class="view">
+        <div class="split-heading">
+          <div>
+            <h2>Activity & Audit Logs</h2>
+            <p>Real-time stream of all automated generation events, checkpoints, decisions, and system alerts.</p>
+          </div>
+          <div class="log-filter-group">
+            <button class="filter-pill active" data-log-filter="all">All</button>
+            <button class="filter-pill" data-log-filter="info">Info</button>
+            <button class="filter-pill" data-log-filter="warning">Warnings</button>
+            <button class="filter-pill" data-log-filter="error">Errors</button>
+          </div>
+        </div>
+        <article class="panel">
+          <div id="all-logs-list" class="activity-list detailed-log-stream"></div>
+        </article>
+      </section>
+
+      <!-- VIEW 15: SETTINGS & GUARDRAILS -->
+      <section id="settings-view" class="view">
+        <div class="section-intro"><div><h2>AI & Channel Guardrails</h2><p>These guardrails guide every agent and model in the pipeline.</p></div></div>
+        <form id="profile-form" class="panel settings-form">
+          <div class="form-grid">
+            <label><span>Channel name</span><input name="channelName" maxlength="120" required></label>
+            <label><span>Default format</span><select name="defaultStyle"><option value="explainer">Explainer</option><option value="tutorial">Tutorial</option><option value="list">List</option><option value="review">Review</option><option value="story">Story</option></select></label>
+            <label class="full-row"><span>Channel goal</span><textarea name="goal" rows="2"></textarea></label>
+            <label class="full-row"><span>Target audience</span><textarea name="targetAudience" rows="2"></textarea></label>
+            <label><span>Brand voice</span><input name="brandVoice" placeholder="Clear, credible, engaging"></label>
+            <label><span>Timezone</span><input name="timezone" placeholder="America/Chicago"></label>
+            <label class="full-row"><span>Default call to action</span><input name="callToAction"></label>
+            <label class="full-row"><span>Visual direction</span><input name="visualStyle"></label>
+            <label class="full-row"><span>Blocked topics or terms</span><input name="bannedTopics" placeholder="term one, term two"><small>Quality review blocks content containing these terms.</small></label>
+          </div>
+          <div class="settings-row">
+            <label class="toggle"><input id="approval-required" type="checkbox"><span></span> Require approval before scheduling</label>
+            <label class="toggle"><input id="notifications-enabled" type="checkbox"><span></span> Save operator notifications</label>
+          </div>
+          <div class="form-grid video-provider-settings">
+            <label><span>Video provider</span><select name="videoProvider"><option value="slideshow">Local slideshow · no provider cost</option><option value="auto">Automatic capability routing</option><option value="seedance">ByteDance Seedance 2.5</option><option value="minimax_h3">MiniMax H3</option><option value="google_omni">Google Gemini Omni Flash</option><option value="kling">Kuaishou Kling 3.0 Omni</option><option value="wan">Alibaba Wan 2.7</option></select><small id="video-provider-status">Provider credentials are checked at runtime.</small></label>
+            <label><span>Generation mode</span><select name="videoGenerationMode"><option value="hybrid">Hybrid · generated clips + local assembly</option><option value="slideshow">Local slideshow only</option></select></label>
+            <label><span>Clip duration</span><input name="videoClipDuration" type="number" min="3" max="30" step="1"></label>
+            <label><span>Paid seconds cap</span><input name="videoMaxGeneratedSeconds" type="number" min="0" max="600" step="1"><small>Maximum provider-generated seconds per production.</small></label>
+          </div>
+          <div class="form-actions"><button type="submit" class="button primary">Save channel setup</button><button id="api-key-button" type="button" class="button secondary">Set dashboard API key</button></div>
+        </form>
+      </section>
+    </main>
+    </div>
+  </div>
+
+  <!-- Mobile Bottom Navigation Bar (for Android / Mobile viewports) -->
+  <nav class="mobile-bottom-nav" aria-label="Mobile Navigation">
+    <button class="mobile-nav-btn active" data-view="overview">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+      <span>Overview</span>
+    </button>
+    <button class="mobile-nav-btn" data-view="pipeline">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="18" cy="18" r="3"/><path d="M8.7 10.7l6.6-3.4M8.7 13.3l6.6 3.4"/></svg>
+      <span>Pipeline</span>
+    </button>
+    <button class="mobile-nav-btn" data-view="scripts">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <span>Scripts</span>
+    </button>
+    <button class="mobile-nav-btn" data-view="review">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      <span>Review</span>
+    </button>
+    <button class="mobile-nav-btn" data-view="system">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+      <span>Health</span>
+    </button>
+  </nav>
+
+  <!-- Dialogs -->
+  <dialog id="generate-dialog" class="dialog">
+    <form id="generate-form" method="dialog">
+      <div class="dialog-heading"><div><p class="eyebrow">NEW GENERATION JOB</p><h2>Create a video</h2></div><button type="button" class="close-button" data-close>×</button></div>
+      <label><span>Topic <small>optional—leave blank for agent selection</small></span><input name="topic" maxlength="200" placeholder="How small teams can automate repetitive work"></label>
+      <div class="form-grid two">
+        <label><span>Format</span><select name="style"><option value="explainer">Explainer</option><option value="tutorial">Tutorial</option><option value="list">List</option><option value="review">Review</option><option value="story">Story</option></select></label>
+        <label><span>Length</span><select name="length"><option value="short">Short · 2–4 min</option><option value="medium" selected>Medium · 8–12 min</option><option value="long">Long · 15–20 min</option></select></label>
+      </div>
+      <p class="callout">Generation runs in the background. You can follow each stage and cancel between stages.</p>
+      <div class="form-actions"><button type="submit" class="button primary">Start generation</button><button type="button" class="button ghost" data-close>Cancel</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="content-dialog" class="dialog content-dialog">
+    <div id="content-detail"></div>
+  </dialog>
+
+  <dialog id="idea-dialog" class="dialog">
+    <form id="idea-form" method="dialog">
+      <div class="dialog-heading"><div><p class="eyebrow">BACKLOG</p><h2>Add a content idea</h2></div><button type="button" class="close-button" data-close>×</button></div>
+      <label><span>Topic</span><input name="topic" maxlength="200" required></label>
+      <label><span>Angle</span><textarea name="angle" rows="3" placeholder="What makes this take distinctive?"></textarea></label>
+      <label><span>Why it is worth making</span><textarea name="rationale" rows="2"></textarea></label>
+      <label><span>Format</span><select name="style"><option value="explainer">Explainer</option><option value="tutorial">Tutorial</option><option value="list">List</option><option value="review">Review</option><option value="story">Story</option></select></label>
+      <div class="form-actions"><button type="submit" class="button primary">Add to backlog</button><button type="button" class="button ghost" data-close>Cancel</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="script-edit-dialog" class="dialog">
+    <form id="script-edit-form" method="dialog">
+      <div class="dialog-heading"><div><p class="eyebrow">SCRIPTS STUDIO</p><h2>Edit Script</h2></div><button type="button" class="close-button" data-close>×</button></div>
+      <input type="hidden" id="edit-script-id" name="id">
+      <label><span>Title</span><input id="edit-script-title" name="title" required></label>
+      <label><span>Hook (First 5 seconds)</span><textarea id="edit-script-hook" name="hook" rows="2"></textarea></label>
+      <label><span>Introduction</span><textarea id="edit-script-intro" name="introduction" rows="3"></textarea></label>
+      <label><span>Main Narrative Content</span><textarea id="edit-script-main" name="main_content" rows="6" required></textarea></label>
+      <label><span>Conclusion</span><textarea id="edit-script-conclusion" name="conclusion" rows="2"></textarea></label>
+      <label><span>Call to Action</span><input id="edit-script-cta" name="call_to_action"></label>
+      <div class="form-actions"><button type="submit" class="button primary">Save Script</button><button type="button" class="button ghost" data-close>Cancel</button></div>
+    </form>
+  </dialog>
+
+  <script src="/app.js" defer></script>
+  <script src="/enhance.js" defer></script>
+</body>
+</html>
